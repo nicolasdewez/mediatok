@@ -1,0 +1,71 @@
+version: '2'
+
+networks:
+    # local network
+    mediatok:
+        external: true
+
+    # Internal & Stub
+    default:
+
+services:
+    php:
+        build: docker/php
+        working_dir: /var/www/app
+        networks:
+            mediatok:
+                aliases:
+                    - php
+            default:
+                aliases:
+                    - php.mediatok
+        volumes:
+            - .:/var/www/app
+            - ~/.composer:/var/www/.composer
+        depends_on:
+            - db
+
+    web:
+        image: nginx:1-alpine
+        networks:
+            mediatok:
+                aliases:
+                    - mediatok
+            default:
+                aliases:
+                    - web.mediatok
+        volumes:
+            - ./docker/nginx/app.conf:/etc/nginx/conf.d/default.conf:ro
+            - .:/var/www/app
+            - ./var/logs/nginx/:/var/log/nginx
+        expose:
+            - 80
+        depends_on:
+            - php
+
+    db:
+        image: postgres:9.6
+        ports:
+            - "5432:5432"
+        networks:
+            mediatok:
+                aliases:
+                    - db
+            default:
+                aliases:
+                    - db.mediatok
+        volumes:
+            - ./docker/db:/usr/local/src
+
+    rabbitmq:
+         image: rabbitmq:3-management
+         ports:
+             - "15672:15672"
+             - "5672:5672"
+         networks:
+             mediatok:
+                 aliases:
+                     - rabbitmq
+             default:
+                 aliases:
+                     - rabbitmq.mediatok
