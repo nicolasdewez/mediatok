@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Configuration / Types{% endblock %}
+
+{% block body %}
+    {% import 'macro/table.html.twig' as table %}
+    {% import 'macro/link.html.twig' as link %}
+
+    <ul class="nav nav-pills">
+        <li role="presentation"><a href="{{ path('app_types_add') }}">Ajouter un type</a></li>
+    </ul>
+
+    <h2>Types de médias</h2>
+
+    {{ table.nb_elements(elements|length) }}
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Libellé</th>
+            <th>Formats</th>
+            <th>Médias</th>
+            <th>Actif</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for element in elements %}
+            <tr>
+                <td><a href="{{ path('app_types_edit', {'id': element.id}) }}">{{ element.title }}</a></td>
+                <td>
+                    {{ element.formats|length }}
+                    {{ link.show(path('app_formats', {'id': element.id})) }}
+                </td>
+                <td>{{ element.medias|length }}</td>
+                <td>{{ table.active(element.active) }}</td>
+            </tr>
+        {% else %}
+            <tr><th colspan="4">Aucun élément</th></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

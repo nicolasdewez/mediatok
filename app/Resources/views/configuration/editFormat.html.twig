@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Configuration / Type / Format / Modifier{% endblock %}
+
+{% block body %}
+    <ul class="nav nav-pills">
+        <li role="presentation"><a href="{{ path('app_formats', {'id': type.id}) }}">Liste des formats</a></li>
+    </ul>
+
+    <h2>Modifier un format disponible pour le type de médias</h2>
+
+    <h3>Type : {{ type.title }}</h3>
+
+    {{ form(form) }}
+{% endblock %}

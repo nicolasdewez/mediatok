@@ -1,0 +1,8 @@
+<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <ul class="nav navbar-nav">
+        {{ include('common/menu-item.html.twig', { 'title': 'Accueil', 'pathInfo': app.request.pathInfo, 'url': path('app_home'), 'strict': true }) }}
+        {{ include('common/menu-item.html.twig', { 'title': 'Configuration', 'pathInfo': app.request.pathInfo, 'url': path('app_types') }) }}
+        {{ include('common/menu-item.html.twig', { 'title': 'Media', 'pathInfo': app.request.pathInfo, 'url': path('app_home') }) }}
+        {{ include('common/menu-item.html.twig', { 'title': 'Export', 'pathInfo': app.request.pathInfo, 'url': path('app_home') }) }}
+    </ul>
+</div>
