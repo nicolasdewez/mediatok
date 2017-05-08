@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Média / Modifier{% endblock %}
+
+{% block body %}
+    <ul class="nav nav-pills">
+        <li role="presentation"><a href="{{ path('app_medias') }}">Liste des médias</a></li>
+    </ul>
+
+    <h2>Modifier un média</h2>
+
+    {{ form_start(form) }}
+    {{ form_row(form.title) }}
+    {{ form_row(form.type) }}
+    {{ form_row(form.format) }}
+
+    <div id="fields">
+        {% for field in form.children if not field.rendered and field.vars.name matches '/field_/' %}
+            {{ form_row(field)}}
+        {%  endfor %}
+    </div>
+
+    {{ form_end(form) }}
+    <input type="hidden" id="is_edit" value="1" />
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('app/medias.js') }}" ></script>
+{% endblock %}

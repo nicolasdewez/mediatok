@@ -2,11 +2,14 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Table
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\FieldRepository")
  */
 class Field
 {
@@ -16,6 +19,8 @@ class Field
      * @ORM\Column(type="smallint", options={"unsigned": true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Serializer\Groups({"api_get"})
      */
     private $id;
 
@@ -23,6 +28,8 @@ class Field
      * @var string
      *
      * @ORM\Column(type="string", length=255)
+     *
+     * @Serializer\Groups({"api_get"})
      */
     private $title;
 
@@ -30,12 +37,22 @@ class Field
      * @var bool
      *
      * @ORM\Column(type="boolean")
+     *
+     * @Serializer\Groups({"api_get"})
      */
     private $active;
+
+    /**
+     * @var Collection
+     *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Type", mappedBy="fields", cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    private $types;
 
     public function __construct()
     {
         $this->active = true;
+        $this->types = new ArrayCollection();
     }
 
     /**
@@ -84,5 +101,25 @@ class Field
     public function isActive(): bool
     {
         return $this->active;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getTypes(): Collection
+    {
+        return $this->types;
+    }
+
+    /**
+     * @param Collection $types
+     *
+     * @return Field
+     */
+    public function setFields(Collection $types): Field
+    {
+        $this->types = $types;
+
+        return $this;
     }
 }

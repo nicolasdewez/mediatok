@@ -2,7 +2,7 @@
     <ul class="nav navbar-nav">
         {{ include('common/menu-item.html.twig', { 'title': 'Accueil', 'pathInfo': app.request.pathInfo, 'url': path('app_home'), 'strict': true }) }}
         {{ include('common/menu-item.html.twig', { 'title': 'Configuration', 'pathInfo': app.request.pathInfo, 'url': path('app_types') }) }}
-        {{ include('common/menu-item.html.twig', { 'title': 'Media', 'pathInfo': app.request.pathInfo, 'url': path('app_home') }) }}
+        {{ include('common/menu-item.html.twig', { 'title': 'Media', 'pathInfo': app.request.pathInfo, 'url': path('app_medias') }) }}
         {{ include('common/menu-item.html.twig', { 'title': 'Export', 'pathInfo': app.request.pathInfo, 'url': path('app_home') }) }}
     </ul>
 </div>

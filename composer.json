@@ -30,7 +30,7 @@
         "sensio/framework-extra-bundle": "^3.0.2",
         "symfony/monolog-bundle": "^3.0.2",
         "symfony/polyfill-apcu": "^1.0",
-        "symfony/symfony": "dev-master",
+        "symfony/symfony": "v3.3.0-BETA1",
         "twig/twig": "^1.0||^2.0",
         "videlalvaro/php-amqplib": "^2.6"
     },

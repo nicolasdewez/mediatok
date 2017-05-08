@@ -101,9 +101,9 @@ class Media
     }
 
     /**
-     * @return Type
+     * @return Type|null
      */
-    public function getType(): Type
+    public function getType(): ?Type
     {
         return $this->type;
     }
@@ -121,9 +121,9 @@ class Media
     }
 
     /**
-     * @return Format
+     * @return Format|null
      */
-    public function getFormat(): Format
+    public function getFormat(): ?Format
     {
         return $this->format;
     }

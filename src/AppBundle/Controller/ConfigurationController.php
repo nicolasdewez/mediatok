@@ -92,7 +92,7 @@ class ConfigurationController extends Controller
      */
     public function listFormatsAction(Type $type): Response
     {
-        $elements = $this->get('doctrine')->getRepository(Format::class)->findBy(['type' =>  $type], ['title' => 'ASC']);
+        $elements = $this->get('doctrine')->getRepository(Format::class)->findBy(['type' => $type], ['title' => 'ASC']);
 
         return $this->render('configuration/listFormats.html.twig', ['type' => $type, 'elements' => $elements]);
     }

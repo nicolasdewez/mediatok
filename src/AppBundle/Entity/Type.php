@@ -48,7 +48,7 @@ class Type
     /**
      * @var Collection
      *
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Field", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Field", inversedBy="types", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $fields;
 
@@ -63,6 +63,7 @@ class Type
     {
         $this->active = true;
         $this->formats = new ArrayCollection();
+        $this->fields = new ArrayCollection();
         $this->medias = new ArrayCollection();
     }
 

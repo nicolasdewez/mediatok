@@ -7,3 +7,6 @@ composer install --no-progress --no-interaction
 
 bin/console doctrine:database:create --if-not-exists
 bin/console doctrine:migrations:migrate --no-interaction
+
+bin/console assets:install --symlink web
+#bin/console fos:js-routing:dump --target=./web/app/fos_js_routes.js
