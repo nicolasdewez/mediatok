@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Média / Rechercher{% endblock %}
+
+{% block body %}
+    <ul class="nav nav-pills">
+        <li role="presentation"><a href="{{ path('app_medias') }}">Liste des médias</a></li>
+    </ul>
+
+    <h2>Rechercher des médias</h2>
+
+    {{ form(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('app/search_medias.js') }}" ></script>
+{% endblock %}

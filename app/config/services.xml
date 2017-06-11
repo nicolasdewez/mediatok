@@ -5,10 +5,53 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <!-- Forms -->
         <service id="AppBundle\Form\MediaType" autowire="true">
             <tag name="form.type" />
         </service>
 
+        <service id="AppBundle\Form\SearchMediaType" autowire="true">
+            <tag name="form.type" />
+        </service>
+
+        <!-- Services -->
+        <service id="AppBundle\Service\AskSearch" autowire="true">
+            <argument type="service" id="old_sound_rabbit_mq.search_producer" />
+        </service>
+
+        <service id="AppBundle\Service\AcceptSearch" autowire="true" public="false" />
+
+        <service id="AppBundle\Service\SftpFinderMedia" autowire="true" public="false">
+            <argument type="service" id="logger" />
+            <tag name="monolog.logger" channel="search" />
+        </service>
+
+        <service id="AppBundle\Service\FilterMedia" autowire="true" public="false">
+            <argument type="service" id="logger" />
+            <tag name="monolog.logger" channel="search" />
+        </service>
+
+        <service id="AppBundle\Service\SaverMedia" autowire="true" public="false">
+            <argument />
+            <argument type="service" id="logger" />
+            <tag name="monolog.logger" channel="search" />
+        </service>
+
+        <!-- Serializer -->
+        <service id="AppBundle\Serializer\TypeDenormalizer" autowire="true" public="false">
+            <tag name="serializer.normalizer" />
+        </service>
+
+        <service id="AppBundle\Serializer\FormatDenormalizer" autowire="true" public="false">
+            <tag name="serializer.normalizer" />
+        </service>
+
+        <!-- Consumers -->
+        <service id="AppBundle\Consumer\Export" autowire="true" public="false" />
+        <service id="AppBundle\Consumer\Search" autowire="true" public="false" />
+
+        <!-- Alias -->
         <service id="Doctrine\ORM\EntityManagerInterface" alias="doctrine.orm.default_entity_manager" />
+        <service id="AppBundle\Service\FinderMedia" alias="AppBundle\Service\SftpFinderMedia" />
     </services>
 </container>

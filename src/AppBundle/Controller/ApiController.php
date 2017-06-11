@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Field;
 use AppBundle\Entity\Format;
 use AppBundle\Entity\Type;
+use AppBundle\Serializer\Groups;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,7 +30,7 @@ class ApiController extends Controller
         ;
 
         return new JsonResponse(
-            $this->get('serializer')->serialize($formats, 'json', ['groups' => ['api_get']]),
+            $this->get('serializer')->serialize($formats, 'json', ['groups' => [Groups::API_GET]]),
             JsonResponse::HTTP_OK,
             [],
             true
@@ -51,7 +52,7 @@ class ApiController extends Controller
         ;
 
         return new JsonResponse(
-            $this->get('serializer')->serialize($fields, 'json', ['groups' => ['api_get']]),
+            $this->get('serializer')->serialize($fields, 'json', ['groups' => [Groups::API_GET]]),
             JsonResponse::HTTP_OK,
             [],
             true

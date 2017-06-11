@@ -20,7 +20,7 @@ class Format
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      *
-     * @Serializer\Groups({"api_get"})
+     * @Serializer\Groups({"api_get", "event_search"})
      */
     private $id;
 

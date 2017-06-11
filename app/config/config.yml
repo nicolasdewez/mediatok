@@ -19,6 +19,7 @@ framework:
     csrf_protection: ~
     validation: { enable_annotations: true }
     serializer: { enable_annotations: true }
+    property_info: true
     templating:
         engines: ['twig']
     default_locale: '%locale%'
@@ -32,6 +33,9 @@ framework:
     assets: ~
     php_errors:
         log: true
+
+monolog:
+    channels: ['search']
 
 # Twig Configuration
 twig:
@@ -62,3 +66,33 @@ doctrine_migrations:
 
 fos_js_routing:
     routes_to_expose: [ app_api_formats_by_types, app_api_fields_by_types ]
+
+old_sound_rabbit_mq:
+    connections:
+        default:
+            host: "%queue_host%"
+            port: "%queue_port%"
+            user: "%queue_user%"
+            password: "%queue_password%"
+            vhost: "%queue_vhost%"
+            lazy: false
+            connection_timeout: 3
+            read_write_timeout: 3
+    producers:
+        export:
+            connection: default
+            exchange_options: {name: 'export', type: direct}
+        search:
+            connection: default
+            exchange_options: {name: 'search', type: direct}
+    consumers:
+        export:
+            connection: default
+            exchange_options: {name: 'export', type: direct}
+            queue_options: {name: 'export'}
+            callback: AppBundle\Consumer\Export
+        search:
+            connection: default
+            exchange_options: {name: 'search', type: direct}
+            queue_options: {name: 'search'}
+            callback: AppBundle\Consumer\Search
