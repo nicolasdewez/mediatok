@@ -9,7 +9,7 @@ use Symfony\Component\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Table
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\FormatRepository")
  */
 class Format
 {

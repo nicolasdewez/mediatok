@@ -31,4 +31,22 @@ class ListExports
 
         return $elements;
     }
+
+    /**
+     * @return array
+     */
+    public function countByExtension(): array
+    {
+        $exports = [];
+        foreach ($this->execute() as $export) {
+            $extension = $export->getExtension();
+            if (!isset($exports[$extension])) {
+                $exports[$extension] = 0;
+            }
+
+            ++$exports[$extension];
+        }
+
+        return $exports;
+    }
 }
