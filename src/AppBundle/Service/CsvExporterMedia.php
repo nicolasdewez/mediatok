@@ -28,7 +28,7 @@ class CsvExporterMedia extends ExporterMedia
         fclose($this->handle);
     }
 
-    protected function writeHeaders()
+    private function writeHeaders()
     {
         fputcsv(
             $this->handle,
@@ -40,7 +40,7 @@ class CsvExporterMedia extends ExporterMedia
     /**
      * @param Media $element
      */
-    protected function writeLine(Media $element)
+    private function writeLine(Media $element)
     {
         $fields = implode('#', $element->getFields());
 

@@ -2,10 +2,14 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Model\ExportMedia;
 use Symfony\Component\HttpFoundation\Response;
 
 class ShowExport
 {
+    const MIME_CSV = 'text/csv';
+    const MIME_PDF = 'application/pdf';
+
     /** @var string */
     private $exportPath;
 
@@ -43,14 +47,14 @@ class ShowExport
     {
         $info = pathinfo($path);
         if (!isset($info['extension'])) {
-            return 'text/csv';
+            return self::MIME_CSV;
         }
 
         switch ($info['extension']) {
-            case 'csv': return 'text/csv';
-            case 'pdf': return 'application/pdf';
+            case ExportMedia::MODE_CSV: return self::MIME_CSV;
+            case ExportMedia::MODE_PDF: return self::MIME_PDF;
         }
 
-        return 'text/csv';
+        return self::MIME_CSV;
     }
 }
