@@ -3,33 +3,20 @@
 namespace AppBundle\Service;
 
 use AppBundle\Model\SearchMedia;
+use AppBundle\Model\Task;
 use AppBundle\Serializer\Groups;
-use Symfony\Component\Serializer\SerializerInterface;
 
-class AcceptSearch
+class AcceptSearch extends AcceptTask
 {
-    /** @var SerializerInterface */
-    private $serializer;
-
     /**
-     * @param SerializerInterface $serializer
+     * {@inheritdoc}
      */
-    public function __construct(SerializerInterface $serializer)
-    {
-        $this->serializer = $serializer;
-    }
-
-    /**
-     * @param string $string
-     *
-     * @return SearchMedia
-     */
-    public function execute(string $string): SearchMedia
+    public function execute(string $string): Task
     {
         /** @var SearchMedia $search */
         $search = $this->serializer->deserialize(
             $string,
-            'AppBundle\Model\SearchMedia',
+            SearchMedia::class,
             'json',
             ['groups' => [Groups::EVENT_SEARCH]]
         );

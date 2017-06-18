@@ -5,21 +5,9 @@ namespace AppBundle\Service;
 use AppBundle\Exception\InvalidFileException;
 use AppBundle\Model\File;
 use AppBundle\Model\SearchMedia;
-use Psr\Log\LoggerInterface;
 
-class FilterMedia
+class FilterSearchMedia extends FilterTask
 {
-    /** @var LoggerInterface */
-    protected $logger;
-
-    /**
-     * @param LoggerInterface $logger
-     */
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
     /**
      * @param SearchMedia $searchMedia
      * @param File[]      $elements

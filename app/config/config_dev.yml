@@ -19,12 +19,6 @@ monolog:
             level: debug
             channels: ['!event']
 
-        app:
-            type: stream
-            path:  "%kernel.logs_dir%/search.%kernel.environment%.log"
-            level: info
-            channels: ['search']
-
         console:
             type: console
             channels: ['!event', '!doctrine']

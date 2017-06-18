@@ -21,7 +21,7 @@ class Type
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      *
-     * @Serializer\Groups({"event_search"})
+     * @Serializer\Groups({"event_search", "event_export"})
      */
     private $id;
 

@@ -32,6 +32,6 @@ class TypeDenormalizer implements DenormalizerInterface
      */
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return $type === 'AppBundle\Entity\Type';
+        return $type === Type::class && isset($data['id']);
     }
 }

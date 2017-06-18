@@ -5,50 +5,72 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <!-- Forms -->
-        <service id="AppBundle\Form\MediaType" autowire="true">
-            <tag name="form.type" />
-        </service>
 
-        <service id="AppBundle\Form\SearchMediaType" autowire="true">
-            <tag name="form.type" />
-        </service>
+        <defaults autowire="true" autoconfigure="true" public="false" />
+        <prototype namespace="AppBundle\" resource="../../src/AppBundle/*" exclude="../../src/AppBundle/{Entity,Exception,Model}" />
 
         <!-- Services -->
-        <service id="AppBundle\Service\AskSearch" autowire="true">
+        <service id="AppBundle\Service\AskSearch" public="true">
             <argument type="service" id="old_sound_rabbit_mq.search_producer" />
         </service>
 
-        <service id="AppBundle\Service\AcceptSearch" autowire="true" public="false" />
+        <service id="AppBundle\Service\AskExport" public="true">
+            <argument type="service" id="old_sound_rabbit_mq.export_producer" />
+        </service>
 
-        <service id="AppBundle\Service\SftpFinderMedia" autowire="true" public="false">
+        <service id="AppBundle\Service\SftpFinderMedia">
             <argument type="service" id="logger" />
             <tag name="monolog.logger" channel="search" />
         </service>
 
-        <service id="AppBundle\Service\FilterMedia" autowire="true" public="false">
+        <service id="AppBundle\Service\FilterSearchMedia">
             <argument type="service" id="logger" />
             <tag name="monolog.logger" channel="search" />
         </service>
 
-        <service id="AppBundle\Service\SaverMedia" autowire="true" public="false">
+        <service id="AppBundle\Service\FilterExportMedia">
+            <argument type="service" id="logger" />
+            <tag name="monolog.logger" channel="export" />
+        </service>
+
+        <service id="AppBundle\Service\SaverMedia">
             <argument />
             <argument type="service" id="logger" />
             <tag name="monolog.logger" channel="search" />
         </service>
 
+        <service id="AppBundle\Service\CsvExporterMedia">
+            <argument type="service" id="logger" />
+            <argument type="string">%app.export.path%</argument>
+            <tag name="monolog.logger" channel="export" />
+        </service>
+
+        <service id="AppBundle\Service\ListExports" public="true">
+            <argument type="string">%app.export.path%</argument>
+        </service>
+
+        <service id="AppBundle\Service\ShowExport" public="true">
+            <argument type="string">%app.export.path%</argument>
+        </service>
+
+        <service id="AppBundle\Service\DeleteExport" public="true">
+            <argument type="string">%app.export.path%</argument>
+        </service>
+
         <!-- Serializer -->
-        <service id="AppBundle\Serializer\TypeDenormalizer" autowire="true" public="false">
+        <service id="AppBundle\Serializer\TypeDenormalizer">
             <tag name="serializer.normalizer" />
         </service>
 
-        <service id="AppBundle\Serializer\FormatDenormalizer" autowire="true" public="false">
+        <service id="AppBundle\Serializer\FormatDenormalizer">
             <tag name="serializer.normalizer" />
         </service>
 
-        <!-- Consumers -->
-        <service id="AppBundle\Consumer\Export" autowire="true" public="false" />
-        <service id="AppBundle\Consumer\Search" autowire="true" public="false" />
+        <service id="AppBundle\Serializer\ExportMediaDenormalizer">
+            <argument />
+            <argument type="service" id="AppBundle\Serializer\TypeDenormalizer" />
+            <tag name="serializer.normalizer" />
+        </service>
 
         <!-- Alias -->
         <service id="Doctrine\ORM\EntityManagerInterface" alias="doctrine.orm.default_entity_manager" />

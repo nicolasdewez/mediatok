@@ -6,7 +6,7 @@ use AppBundle\Entity\Format;
 use AppBundle\Entity\Type;
 use Symfony\Component\Serializer\Annotation as Serializer;
 
-class SearchMedia
+class SearchMedia implements Task
 {
     const PROTOCOL_SFTP = 'ssh2.sftp';
 

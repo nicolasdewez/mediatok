@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Exports{% endblock %}
+
+{% block body %}
+    {% import 'macro/table.html.twig' as table %}
+
+    <ul class="nav nav-pills">
+        <li role="presentation"><a href="{{ path('app_exports_ask') }}">Demander un export</a></li>
+    </ul>
+
+    <h2>Exports</h2>
+
+    {{ table.nb_elements(elements|length) }}
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Heure</th>
+            <th>Extension</th>
+            <th>Voir</th>
+            <th>Supprimer</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for element in elements %}
+            <tr>
+                <td>{{ element.date }}</td>
+                <td>{{ element.time }}</td>
+                <td>{{ element.extension }}</td>
+                <td><a href="{{ path('app_exports_get', {'file': element.name}) }}">Voir</a></td>
+                <td><a href="{{ path('app_exports_delete', {'file': element.name}) }}">Supprimer</a></td>
+            </tr>
+        {% else %}
+            <tr><th colspan="5">Aucun élément</th></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

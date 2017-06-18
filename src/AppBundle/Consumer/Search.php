@@ -2,8 +2,9 @@
 
 namespace AppBundle\Consumer;
 
+use AppBundle\Model\SearchMedia;
 use AppBundle\Service\AcceptSearch;
-use AppBundle\Service\FilterMedia;
+use AppBundle\Service\FilterSearchMedia;
 use AppBundle\Service\FinderMedia;
 use AppBundle\Service\SaverMedia;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -16,19 +17,19 @@ class Search
     /** @var FinderMedia */
     private $finder;
 
-    /** @var FilterMedia */
+    /** @var FilterSearchMedia */
     private $filter;
 
     /** @var SaverMedia */
     private $saver;
 
     /**
-     * @param AcceptSearch $acceptSearch
-     * @param FinderMedia  $finder
-     * @param FilterMedia  $filter
-     * @param SaverMedia   $saver
+     * @param AcceptSearch      $acceptSearch
+     * @param FinderMedia       $finder
+     * @param FilterSearchMedia $filter
+     * @param SaverMedia        $saver
      */
-    public function __construct(AcceptSearch $acceptSearch, FinderMedia $finder, FilterMedia $filter, SaverMedia $saver)
+    public function __construct(AcceptSearch $acceptSearch, FinderMedia $finder, FilterSearchMedia $filter, SaverMedia $saver)
     {
         $this->acceptSearch = $acceptSearch;
         $this->finder = $finder;
@@ -41,6 +42,7 @@ class Search
      */
     public function execute(AMQPMessage $message)
     {
+        /** @var SearchMedia $searchMedia */
         $searchMedia = $this->acceptSearch->execute($message->getBody());
         $elements = $this->finder->execute($searchMedia);
         $medias = $this->filter->execute($searchMedia, $elements);

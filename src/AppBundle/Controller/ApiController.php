@@ -6,9 +6,11 @@ use AppBundle\Entity\Field;
 use AppBundle\Entity\Format;
 use AppBundle\Entity\Type;
 use AppBundle\Serializer\Groups;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/api")
@@ -16,21 +18,23 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class ApiController extends Controller
 {
     /**
-     * @param Type $type
+     * @param EntityManagerInterface $manager
+     * @param SerializerInterface    $serializer
+     * @param Type                   $type
      *
      * @return JsonResponse
      *
      * @Route("/types/{id}/formats", name="app_api_formats_by_types", methods={"GET"})
      */
-    public function formatsByTypeAction(Type $type): JsonResponse
+    public function formatsByTypeAction(EntityManagerInterface $manager, SerializerInterface $serializer, Type $type): JsonResponse
     {
-        $formats = $this->get('doctrine.orm.default_entity_manager')
+        $formats = $manager
             ->getRepository(Format::class)
             ->findBy(['type' => $type, 'active' => true], ['title' => 'ASC'])
         ;
 
         return new JsonResponse(
-            $this->get('serializer')->serialize($formats, 'json', ['groups' => [Groups::API_GET]]),
+            $serializer->serialize($formats, 'json', ['groups' => [Groups::API_GET]]),
             JsonResponse::HTTP_OK,
             [],
             true
@@ -38,21 +42,23 @@ class ApiController extends Controller
     }
 
     /**
-     * @param Type $type
+     * @param EntityManagerInterface $manager
+     * @param SerializerInterface    $serializer
+     * @param Type                   $type
      *
      * @return JsonResponse
      *
      * @Route("/types/{id}/fields", name="app_api_fields_by_types", methods={"GET"})
      */
-    public function fieldsByTypeAction(Type $type): JsonResponse
+    public function fieldsByTypeAction(EntityManagerInterface $manager, SerializerInterface $serializer, Type $type): JsonResponse
     {
-        $fields = $this->get('doctrine.orm.default_entity_manager')
+        $fields = $manager
             ->getRepository(Field::class)
             ->getActiveAndSortedByType($type)
         ;
 
         return new JsonResponse(
-            $this->get('serializer')->serialize($fields, 'json', ['groups' => [Groups::API_GET]]),
+            $serializer->serialize($fields, 'json', ['groups' => [Groups::API_GET]]),
             JsonResponse::HTTP_OK,
             [],
             true

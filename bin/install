@@ -3,6 +3,8 @@
 set -e
 cd "`dirname "$0"`/.."
 
+mkdir -p web/exports
+
 composer install --no-progress --no-interaction
 
 bin/console doctrine:database:create --if-not-exists
