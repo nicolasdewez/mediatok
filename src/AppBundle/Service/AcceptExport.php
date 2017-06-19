@@ -3,7 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Model\ExportMedia;
-use AppBundle\Model\Task;
+use AppBundle\Model\TaskInterface;
 use AppBundle\Serializer\Groups;
 
 class AcceptExport extends AcceptTask
@@ -11,7 +11,7 @@ class AcceptExport extends AcceptTask
     /**
      * {@inheritdoc}
      */
-    public function execute(string $string): Task
+    public function execute(string $string): TaskInterface
     {
         /** @var ExportMedia $export */
         $export = $this->serializer->deserialize(

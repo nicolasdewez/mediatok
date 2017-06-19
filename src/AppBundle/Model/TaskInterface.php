@@ -2,6 +2,6 @@
 
 namespace AppBundle\Model;
 
-interface Task
+interface TaskInterface
 {
 }

@@ -4,8 +4,8 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Format;
 use AppBundle\Entity\Type;
-use AppBundle\Form\FormatType;
-use AppBundle\Form\TypeType;
+use AppBundle\Form\Type\FormatType;
+use AppBundle\Form\Type\TypeType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

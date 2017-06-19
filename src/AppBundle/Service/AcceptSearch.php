@@ -3,7 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Model\SearchMedia;
-use AppBundle\Model\Task;
+use AppBundle\Model\TaskInterface;
 use AppBundle\Serializer\Groups;
 
 class AcceptSearch extends AcceptTask
@@ -11,7 +11,7 @@ class AcceptSearch extends AcceptTask
     /**
      * {@inheritdoc}
      */
-    public function execute(string $string): Task
+    public function execute(string $string): TaskInterface
     {
         /** @var SearchMedia $search */
         $search = $this->serializer->deserialize(

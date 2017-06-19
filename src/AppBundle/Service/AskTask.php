@@ -2,7 +2,7 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Model\Task;
+use AppBundle\Model\TaskInterface;
 use OldSound\RabbitMqBundle\RabbitMq\ProducerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -25,7 +25,7 @@ abstract class AskTask
     }
 
     /**
-     * @param Task $task
+     * @param TaskInterface $task
      */
-    abstract public function execute(Task $task);
+    abstract public function execute(TaskInterface $task);
 }

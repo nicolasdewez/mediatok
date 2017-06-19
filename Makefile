@@ -101,6 +101,10 @@ endif
 ps: ## List containers status
 	@$(COMPOSE) ps
 
+.PHONY: phpunit
+phpunit: ## Execute units tests
+	@$(COMPOSE) exec $(PHP) vendor/bin/phpunit
+
 .PHONY: ready
 ready: pretty ## Check if environment is ready
 	@echo "[READY]" | $(call $(PRINT),READY,$(COLOR_READY))

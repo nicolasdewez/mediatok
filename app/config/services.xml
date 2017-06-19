@@ -70,7 +70,6 @@
         </service>
 
         <service id="AppBundle\Serializer\ExportMediaDenormalizer">
-            <argument />
             <argument type="service" id="AppBundle\Serializer\TypeDenormalizer" />
             <tag name="serializer.normalizer" />
         </service>

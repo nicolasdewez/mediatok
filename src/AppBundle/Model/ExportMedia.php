@@ -6,7 +6,7 @@ use AppBundle\Entity\Type;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Serializer\Annotation as Serializer;
 
-class ExportMedia implements Task
+class ExportMedia implements TaskInterface
 {
     const MODE_CSV = 'csv';
     const MODE_PDF = 'pdf';

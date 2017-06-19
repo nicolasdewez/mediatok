@@ -1,15 +1,17 @@
 <?php
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Type;
 
-use AppBundle\Entity\Field;
 use AppBundle\Entity\Format;
-use AppBundle\Entity\Media;
 use AppBundle\Entity\Type;
+use AppBundle\Model\SearchMedia;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -17,9 +19,9 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * Class MediaType.
+ * Class SearchMediaType.
  */
-class MediaType extends AbstractType
+class SearchMediaType extends AbstractType
 {
     /** @var EntityManagerInterface */
     private $manager;
@@ -38,7 +40,31 @@ class MediaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', TextType::class, ['label' => 'Libellé'])
+            ->add('protocol', ChoiceType::class, [
+                'choices' => ['SFTP' => SearchMedia::PROTOCOL_SFTP],
+                'label' => 'Protocole',
+            ])
+            ->add('host', TextType::class, ['label' => 'Serveur distant'])
+            ->add('port', NumberType::class, ['label' => 'Port'])
+            ->add('username', TextType::class, ['label' => 'Nom d\'utilisateur'])
+            ->add('password', TextType::class, ['label' => 'Mot de passe'])
+            ->add('directory', TextType::class, ['label' => 'Répertoire'])
+            ->add('recursive', CheckboxType::class, ['label' => 'Récursivité', 'required' => false])
+            ->add('filter', TextType::class, ['label' => 'Filtre'])
+            ->add('fileMode', ChoiceType::class, [
+                'choices' => [
+                    'Les fichiers' => SearchMedia::FILE_MODE_FILES,
+                    'Les dossiers' => SearchMedia::FILE_MODE_DIRECTORIES,
+                ],
+                'label' => 'Enregistrer',
+            ])
+            ->add('saveMode', ChoiceType::class, [
+                'choices' => [
+                    'Ne rien faire' => SearchMedia::SAVE_MODE_NOTHING,
+                    'Mettre à jour' => SearchMedia::SAVE_MODE_UPDATE,
+                ],
+                'label' => 'Que faire si l\'élément existe ?',
+            ])
             ->add('type', EntityType::class, [
                 'class' => Type::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -49,16 +75,12 @@ class MediaType extends AbstractType
                 'choice_label' => 'title',
                 'label' => 'Type',
             ])
-
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
                 $form = $event->getForm();
                 $type = $event->getData()->getType();
 
                 // Change form fields
                 $this->addFormatField($form, $type);
-                if (null !== $type) {
-                    $this->addAdditionalFieldsWithValues($form, $event->getData());
-                }
             })
             ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
                 $form = $event->getForm();
@@ -75,10 +97,6 @@ class MediaType extends AbstractType
 
                 // Change form fields
                 $this->addFormatField($form, $type);
-                $this->addAdditionalFields($form, $type);
-
-                // Set attribute fields in object
-                $this->setFieldsIntoMedia($event->getForm()->getData(), $event->getData());
             })
         ;
     }
@@ -97,71 +115,10 @@ class MediaType extends AbstractType
                     ->andWhere('f.type = :type')
                     ->orderBy('f.title', 'ASC')
                     ->setParameter('type', $type)
-                ;
+                    ;
             },
             'choice_label' => 'title',
             'label' => 'Format',
         ]);
-    }
-
-    /**
-     * @param FormInterface $form
-     * @param Type|null     $type
-     */
-    private function addAdditionalFields(FormInterface $form, Type $type = null)
-    {
-        $fields = $this->manager->getRepository(Field::class)->getActiveAndSortedByType($type);
-        foreach ($fields as $field) {
-            $form->add(sprintf('field_%d', $field->getId()), TextType::class, [
-                'label' => $field->getTitle(),
-                'required' => false,
-                'mapped' => false,
-            ]);
-        }
-    }
-
-    /**
-     * @param FormInterface $form
-     * @param Media         $media
-     */
-    private function addAdditionalFieldsWithValues(FormInterface $form, Media $media)
-    {
-        if (null === $media->getType()) {
-            return;
-        }
-
-        $fields = $this->manager->getRepository(Field::class)->getActiveAndSortedByType($media->getType());
-        foreach ($fields as $field) {
-            $data = '';
-            if (isset($media->getFields()[$field->getId()])) {
-                $data = $media->getFields()[$field->getId()];
-            }
-
-            $form->add(sprintf('field_%d', $field->getId()), TextType::class, [
-                'label' => $field->getTitle(),
-                'required' => false,
-                'mapped' => false,
-                'data' => $data,
-            ]);
-        }
-    }
-
-    /**
-     * @param Media $media
-     * @param array $data
-     */
-    private function setFieldsIntoMedia(Media $media, array $data)
-    {
-        $keys = array_filter(array_keys($data), function ($key) {
-            return preg_match('/^field_/', $key);
-        });
-
-        $fields = [];
-        foreach ($keys as $key) {
-            $id = substr($key, 6);  // Length of "field_"
-            $fields[$id] = $data[$key];
-        }
-
-        $media->setFields($fields);
     }
 }

@@ -8,20 +8,20 @@ class File
     private $name;
 
     /** @var bool */
-    private $isDirectory;
+    private $directory;
 
     /** @var File[] */
     private $files;
 
     /**
      * @param string $name
-     * @param bool   $isDirectory
+     * @param bool   $directory
      * @param array  $files
      */
-    public function __construct(string $name, bool $isDirectory = false, array $files = [])
+    public function __construct(string $name, bool $directory = false, array $files = [])
     {
         $this->name = $name;
-        $this->isDirectory = $isDirectory;
+        $this->directory = $directory;
         $this->files = $files;
     }
 
@@ -50,7 +50,7 @@ class File
      */
     public function isDirectory(): bool
     {
-        return $this->isDirectory;
+        return $this->directory;
     }
 
     /**
@@ -58,17 +58,17 @@ class File
      */
     public function isFile(): bool
     {
-        return !$this->isDirectory;
+        return !$this->directory;
     }
 
     /**
-     * @param bool $isDirectory
+     * @param bool $directory
      *
      * @return File
      */
-    public function setIsDirectory(bool $isDirectory): File
+    public function setDirectory(bool $directory): File
     {
-        $this->isDirectory = $isDirectory;
+        $this->directory = $directory;
 
         return $this;
     }

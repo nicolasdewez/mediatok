@@ -3,8 +3,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Media;
-use AppBundle\Form\MediaType;
-use AppBundle\Form\SearchMediaType;
+use AppBundle\Form\Type\MediaType;
+use AppBundle\Form\Type\SearchMediaType;
 use AppBundle\Model\SearchMedia;
 use AppBundle\Service\AskSearch;
 use Doctrine\ORM\EntityManagerInterface;

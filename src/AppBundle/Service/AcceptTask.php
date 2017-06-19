@@ -2,7 +2,7 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Model\Task;
+use AppBundle\Model\TaskInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 abstract class AcceptTask
@@ -21,7 +21,7 @@ abstract class AcceptTask
     /**
      * @param string $string
      *
-     * @return Task
+     * @return TaskInterface
      */
-    abstract public function execute(string $string): Task;
+    abstract public function execute(string $string): TaskInterface;
 }

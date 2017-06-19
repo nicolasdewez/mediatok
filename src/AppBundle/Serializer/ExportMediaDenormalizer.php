@@ -4,24 +4,18 @@ namespace AppBundle\Serializer;
 
 use AppBundle\Entity\Type;
 use AppBundle\Model\ExportMedia;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class ExportMediaDenormalizer implements DenormalizerInterface
 {
-    /** @var EntityManagerInterface */
-    private $manager;
-
     /** @var DenormalizerInterface */
     private $typeDenormalizer;
 
     /**
-     * @param EntityManagerInterface $manager
-     * @param DenormalizerInterface  $typeDenormalizer
+     * @param DenormalizerInterface $typeDenormalizer
      */
-    public function __construct(EntityManagerInterface $manager, DenormalizerInterface $typeDenormalizer)
+    public function __construct(DenormalizerInterface $typeDenormalizer)
     {
-        $this->manager = $manager;
         $this->typeDenormalizer = $typeDenormalizer;
     }
 

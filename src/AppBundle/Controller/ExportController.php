@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Form\ExportMediaType;
+use AppBundle\Form\Type\ExportMediaType;
 use AppBundle\Model\ExportMedia;
 use AppBundle\Service\AskExport;
 use AppBundle\Service\DeleteExport;

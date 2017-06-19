@@ -48,7 +48,7 @@ class FilterSearchMedia extends FilterTask
                 continue;
             }
 
-            if (true !== $element->isDirectory()) {
+            if (true !== $element->directory()) {
                 throw new InvalidFileException(sprintf('Element %s is not file, not directory.', $element->getName()));
             }
 
