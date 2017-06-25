@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service;
+namespace AppBundle\Service\Exporter;
 
 use AppBundle\Exception\InvalidModeExportException;
 use AppBundle\Model\ExportMedia;

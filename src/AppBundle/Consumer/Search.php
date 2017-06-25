@@ -3,10 +3,10 @@
 namespace AppBundle\Consumer;
 
 use AppBundle\Model\SearchMedia;
-use AppBundle\Service\AcceptSearch;
-use AppBundle\Service\FilterSearchMedia;
-use AppBundle\Service\FinderMedia;
-use AppBundle\Service\SaverMedia;
+use AppBundle\Service\Tasker\AcceptSearch;
+use AppBundle\Service\Filter\FilterSearchMedia;
+use AppBundle\Service\Finder\FinderMedia;
+use AppBundle\Service\Manager\SaverMedia;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class Search

@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service;
+namespace AppBundle\Service\Exporter;
 
 use AppBundle\Entity\Media;
 use Psr\Log\LoggerInterface;

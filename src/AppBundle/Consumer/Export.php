@@ -4,9 +4,9 @@ namespace AppBundle\Consumer;
 
 use AppBundle\Entity\Media;
 use AppBundle\Model\ExportMedia;
-use AppBundle\Service\AcceptExport;
-use AppBundle\Service\ChoiceExporterMedia;
-use AppBundle\Service\FilterExportMedia;
+use AppBundle\Service\Tasker\AcceptExport;
+use AppBundle\Service\Exporter\ChoiceExporterMedia;
+use AppBundle\Service\Filter\FilterExportMedia;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpAmqpLib\Message\AMQPMessage;
 

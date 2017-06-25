@@ -10,30 +10,30 @@
         <prototype namespace="AppBundle\" resource="../../src/AppBundle/*" exclude="../../src/AppBundle/{Entity,Exception,Model}" />
 
         <!-- Services -->
-        <service id="AppBundle\Service\AskSearch" public="true">
+        <service id="AppBundle\Service\Tasker\AskSearch" public="true">
             <argument type="service" id="old_sound_rabbit_mq.search_producer" />
         </service>
 
-        <service id="AppBundle\Service\AskExport" public="true">
+        <service id="AppBundle\Service\Tasker\AskExport" public="true">
             <argument type="service" id="old_sound_rabbit_mq.export_producer" />
         </service>
 
-        <service id="AppBundle\Service\SftpFinderMedia">
+        <service id="AppBundle\Service\Finder\SftpFinderMedia">
             <argument type="service" id="logger" />
             <tag name="monolog.logger" channel="search" />
         </service>
 
-        <service id="AppBundle\Service\FilterSearchMedia">
+        <service id="AppBundle\Service\Filter\FilterSearchMedia">
             <argument type="service" id="logger" />
             <tag name="monolog.logger" channel="search" />
         </service>
 
-        <service id="AppBundle\Service\FilterExportMedia">
+        <service id="AppBundle\Service\Filter\FilterExportMedia">
             <argument type="service" id="logger" />
             <tag name="monolog.logger" channel="export" />
         </service>
 
-        <service id="AppBundle\Service\SaverMedia">
+        <service id="AppBundle\Service\Manager\SaverMedia">
             <argument />
             <argument type="service" id="logger" />
             <tag name="monolog.logger" channel="search" />
@@ -45,18 +45,18 @@
             <tag name="monolog.logger" channel="export" />
         </service>
 
-        <service id="AppBundle\Service\CsvExporterMedia" parent="app.export.abstract" autoconfigure="false" public="false" autowire="true" />
-        <service id="AppBundle\Service\PdfExporterMedia" parent="app.export.abstract" autoconfigure="false" public="false" autowire="true" />
+        <service id="AppBundle\Service\Exporter\CsvExporterMedia" parent="app.export.abstract" autoconfigure="false" public="false" autowire="true" />
+        <service id="AppBundle\Service\Exporter\PdfExporterMedia" parent="app.export.abstract" autoconfigure="false" public="false" autowire="true" />
 
-        <service id="AppBundle\Service\ListExports" public="true">
+        <service id="AppBundle\Service\Manager\ListExports" public="true">
             <argument type="string">%app.export.path%</argument>
         </service>
 
-        <service id="AppBundle\Service\ShowExport" public="true">
+        <service id="AppBundle\Service\Manager\ShowExport" public="true">
             <argument type="string">%app.export.path%</argument>
         </service>
 
-        <service id="AppBundle\Service\DeleteExport" public="true">
+        <service id="AppBundle\Service\Manager\DeleteExport" public="true">
             <argument type="string">%app.export.path%</argument>
         </service>
 
@@ -76,6 +76,6 @@
 
         <!-- Alias -->
         <service id="Doctrine\ORM\EntityManagerInterface" alias="doctrine.orm.default_entity_manager" />
-        <service id="AppBundle\Service\FinderMedia" alias="AppBundle\Service\SftpFinderMedia" />
+        <service id="AppBundle\Service\Finder\FinderMedia" alias="AppBundle\Service\Finder\SftpFinderMedia" />
     </services>
 </container>

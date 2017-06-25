@@ -1,11 +1,11 @@
 <?php
 
-namespace AppBundle\Service;
+namespace AppBundle\Service\Tasker;
 
 use AppBundle\Model\TaskInterface;
 use AppBundle\Serializer\Groups;
 
-class AskExport extends AskTask
+class AskSearch extends AskTask
 {
     /**
      * {@inheritdoc}
@@ -13,7 +13,7 @@ class AskExport extends AskTask
     public function execute(TaskInterface $task)
     {
         $this->producer->publish(
-            $this->serializer->serialize($task, 'json', ['groups' => [Groups::EVENT_EXPORT]])
+            $this->serializer->serialize($task, 'json', ['groups' => [Groups::EVENT_SEARCH]])
         );
     }
 }

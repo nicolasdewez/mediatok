@@ -6,7 +6,7 @@ use AppBundle\Entity\Media;
 use AppBundle\Form\Type\MediaType;
 use AppBundle\Form\Type\SearchMediaType;
 use AppBundle\Model\SearchMedia;
-use AppBundle\Service\AskSearch;
+use AppBundle\Service\Tasker\AskSearch;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

@@ -1,8 +1,8 @@
 <?php
 
-namespace tests\AppBundle\Service;
+namespace tests\AppBundle\Service\Manager;
 
-use AppBundle\Service\DeleteExport;
+use AppBundle\Service\Manager\DeleteExport;
 use PHPUnit\Framework\TestCase;
 
 class DeleteExportTest extends TestCase

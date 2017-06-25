@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service;
+namespace AppBundle\Service\Filter;
 
 use Psr\Log\LoggerInterface;
 

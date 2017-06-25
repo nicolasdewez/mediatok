@@ -1,21 +1,21 @@
 <?php
 
-namespace tests\AppBundle\Service;
+namespace tests\AppBundle\Service\Tasker;
 
-use AppBundle\Model\SearchMedia;
-use AppBundle\Service\AcceptSearch;
+use AppBundle\Model\ExportMedia;
+use AppBundle\Service\Tasker\AcceptExport;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class AcceptSearchTest extends TestCase
+class AcceptExportTest extends TestCase
 {
     public function testExecute()
     {
-        $task = new SearchMedia();
+        $task = new ExportMedia();
         $task
+            ->setMode(ExportMedia::MODE_CSV)
             ->setFilter('.*')
-            ->setDirectory('/')
-            ->setFileMode(SearchMedia::FILE_MODE_DIRECTORIES)
+            ->setTypes([])
         ;
 
         $serializer = $this->createMock(SerializerInterface::class);
@@ -24,7 +24,7 @@ class AcceptSearchTest extends TestCase
             ->willReturn($task)
         ;
 
-        $object = new AcceptSearch($serializer);
+        $object = new AcceptExport($serializer);
         $this->assertSame($task, $object->execute(''));
     }
 }

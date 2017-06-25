@@ -4,10 +4,10 @@ namespace AppBundle\Controller;
 
 use AppBundle\Form\Type\ExportMediaType;
 use AppBundle\Model\ExportMedia;
-use AppBundle\Service\AskExport;
-use AppBundle\Service\DeleteExport;
-use AppBundle\Service\ListExports;
-use AppBundle\Service\ShowExport;
+use AppBundle\Service\Tasker\AskExport;
+use AppBundle\Service\Manager\DeleteExport;
+use AppBundle\Service\Manager\ListExports;
+use AppBundle\Service\Manager\ShowExport;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;

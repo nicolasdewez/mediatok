@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service;
+namespace AppBundle\Service\Finder;
 
 use AppBundle\Exception\ProtocolSearchInvalidException;
 use AppBundle\Exception\SshException;

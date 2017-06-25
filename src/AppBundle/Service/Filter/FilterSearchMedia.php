@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service;
+namespace AppBundle\Service\Filter;
 
 use AppBundle\Exception\InvalidFileException;
 use AppBundle\Model\File;

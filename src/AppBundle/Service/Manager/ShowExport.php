@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service;
+namespace AppBundle\Service\Manager;
 
 use AppBundle\Model\ExportMedia;
 use Symfony\Component\HttpFoundation\Response;

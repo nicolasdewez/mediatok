@@ -1,11 +1,11 @@
 <?php
 
-namespace tests\AppBundle\Service;
+namespace tests\AppBundle\Service\Exporter;
 
 use AppBundle\Model\ExportMedia;
-use AppBundle\Service\ChoiceExporterMedia;
-use AppBundle\Service\CsvExporterMedia;
-use AppBundle\Service\PdfExporterMedia;
+use AppBundle\Service\Exporter\ChoiceExporterMedia;
+use AppBundle\Service\Exporter\CsvExporterMedia;
+use AppBundle\Service\Exporter\PdfExporterMedia;
 use PHPUnit\Framework\TestCase;
 
 class ChoiceExporterMediaTest extends TestCase

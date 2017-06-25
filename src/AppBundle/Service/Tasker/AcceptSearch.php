@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service;
+namespace AppBundle\Service\Tasker;
 
 use AppBundle\Model\SearchMedia;
 use AppBundle\Model\TaskInterface;
