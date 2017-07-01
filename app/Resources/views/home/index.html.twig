@@ -24,11 +24,23 @@
             </tr>
             <tr>
                 <td>Type contenant le plus de médias</td>
-                <td>{{ stats.types.maxMedia.type.title }} - {{ stats.types.maxMedia.nb }}</td>
+                <td>
+                    {% if stats.types.maxMedia is not null %}
+                        {{ stats.types.maxMedia.type.title }} - {{ stats.types.maxMedia.nb }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <td>Type contenant le plus de médias actifs</td>
-                <td>{{ stats.types.maxMediaActive.type.title }} - {{ stats.types.maxMediaActive.nb }}</td>
+                <td>
+                    {% if stats.types.maxMediaActive is not null %}
+                        {{ stats.types.maxMediaActive.type.title }} - {{ stats.types.maxMediaActive.nb }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <td>Nombre de formats</td>
@@ -40,19 +52,39 @@
             </tr>
             <tr>
                 <td>Format contenant le plus de médias</td>
-                <td>{{ stats.formats.maxMedia.format.title }} ({{ stats.formats.maxMedia.format.type.title }}) - {{ stats.types.maxMedia.nb }}</td>
+                <td>
+                    {% if stats.types.maxMedia is not null %}
+                        {{ stats.formats.maxMedia.format.title }} ({{ stats.formats.maxMedia.format.type.title }}) - {{ stats.types.maxMedia.nb }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <td>Format contenant le plus de médias actifs</td>
-                <td>{{ stats.formats.maxMediaActive.format.title }} ({{ stats.formats.maxMediaActive.format.type.title }}) - {{ stats.types.maxMediaActive.nb }}</td>
+                <td>
+                    {% if stats.types.maxMediaActive is not null %}
+                        {{ stats.formats.maxMediaActive.format.title }} ({{ stats.formats.maxMediaActive.format.type.title }}) - {{ stats.types.maxMediaActive.nb }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <td>Nombre d'exports CSV</td>
-                <td>{{ stats.exports.csv }}</td>
+                <td>
+                    {% if stats.exports.csv is defined %}
+                        {{ stats.exports.csv }}
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <td>Nombre d'exports PDF</td>
-                <td>{{ stats.exports.pdf }}</td>
+                <td>
+                    {% if stats.exports.pdf is defined %}
+                        {{ stats.exports.pdf }}
+                    {% endif %}
+                </td>
             </tr>
         </tbody>
     </table>

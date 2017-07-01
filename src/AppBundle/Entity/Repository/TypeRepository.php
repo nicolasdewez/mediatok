@@ -30,9 +30,9 @@ class TypeRepository extends EntityRepository
     /**
      * @param bool $onlyActive
      *
-     * @return array
+     * @return array|null
      */
-    public function getContainsMaxMedia(bool $onlyActive = false): array
+    public function getContainsMaxMedia(bool $onlyActive = false): ?array
     {
         $query = $this->createQueryBuilder('t')
             ->select('COUNT(m.id) AS nb')
@@ -50,6 +50,11 @@ class TypeRepository extends EntityRepository
             ;
         }
 
-        return $query->getQuery()->getSingleResult();
+        $results = $query->getQuery()->getResult();
+        if (0 === count($results)) {
+            return null;
+        }
+
+        return $results[0];
     }
 }

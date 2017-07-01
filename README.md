@@ -3,4 +3,23 @@
 mediatok
 ========
 
-A Symfony project created on April 22, 2017, 10:26 am.
+## Requirements 
+
+* Docker
+* Docker Compose
+* Docker Repository: iamluc/host-manager
+
+
+## Start application
+
+Use this command:
+
+```bash
+make start
+```
+
+## Access to application
+
+You can go to: [http://web.mediatok/](http://web.mediatok/)
+
+Dev environment is used by default.

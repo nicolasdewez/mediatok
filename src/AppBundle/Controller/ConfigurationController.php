@@ -57,7 +57,7 @@ class ConfigurationController extends Controller
             return $this->redirectToRoute('app_types');
         }
 
-        return new Response($this->twig->render('configuration/addType.html.twig', ['form' => $form->createView()]));
+        return $this->render('configuration/addType.html.twig', ['form' => $form->createView()]);
     }
 
     /**

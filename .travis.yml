@@ -1,13 +1,20 @@
-language: php
+sudo: required
 
-php:
-    - 7.1
+services:
+    - docker
 
 before_script:
-    - composer install --no-progress --no-interaction
+    - docker run -d --name docker-hostmanager --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v /etc/hosts:/hosts iamluc/docker-hostmanager
+    - docker network create mediatok
+    - docker-compose -p mediatok -f docker-compose.yml up -d --remove-orphans
+    - docker run --rm --net=mediatok -e TIMEOUT=30 -e TARGETS=php:9000 ddn0/wait 2> /dev/null
+    - docker run --rm --net=mediatok -e TIMEOUT=30 -e TARGETS=db:5432 ddn0/wait 2> /dev/null
+    - docker-compose -p mediatok -f docker-compose.yml exec db /usr/local/src/init.sh
+    - docker-compose -p mediatok -f docker-compose.yml run --rm php bin/install
 
 script:
-    - phpunit
+    - docker-compose -p mediatok -f docker-compose.yml exec -T php vendor/bin/phpunit
+    - docker-compose -p mediatok -f docker-compose.yml run --rm php vendor/bin/php-cs-fixer fix -v --dry-run --diff --config=.php_cs.dist
 
 notifications:
     email:

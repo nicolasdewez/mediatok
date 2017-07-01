@@ -1,145 +1,148 @@
+SHELL = /bin/bash -o pipefail
 .DEFAULT_GOAL := help
 
 #################################
 # Configuration
 #################################
 
-PROJECT = mediatok
-PHP = php
+# Global
+PROJECT ?= mediatok
+APP = php
 WEB = web
 DB = db
-RABBITMQ = rabbitmq
 DB_NAME = mediatok
-
-DOCKER = docker
-DOCKER_BUILD = $(DOCKER) build -t
-
+RABBITMQ = rabbitmq
 NETWORK = mediatok
 DEBUG = $(debug)
 
-COMPOSE = docker-compose -p $(PROJECT) $(CONFIG)
-RUN = $(COMPOSE) run --rm -e DEBUG=$(DEBUG)
+# Aliases
+COMPOSE = $(ENV_VARS) docker-compose -p $(PROJECT) -f docker-compose.yml
+RUN = $(COMPOSE) run --rm --user=www-data $(APP)
+EXEC = $(COMPOSE) exec -T --user=www-data
+ENV_VARS = NETWORK=$(NETWORK) DEBUG=$(DEBUG)
+
+# Project name must be compatible with docker-compose
+override PROJECT := $(shell echo $(PROJECT) | tr -d -c '[a-z0-9]' | cut -c 1-55)
 
 # Print output
 # For colors, see https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
 INTERACTIVE := $(shell tput colors 2> /dev/null)
 COLOR_UP = 3
 COLOR_INSTALL = 6
-COLOR_READY = 5
+COLOR_WAIT = 5
 COLOR_STOP = 1
 PRINT_CLASSIC = cat
 PRINT_PRETTY = sed 's/^/$(shell printf "\033[3$(2)m[%-7s]\033[0m " $(1))/'
 PRINT_PRETTY_NO_COLORS = sed 's/^/$(shell printf "[%-7s] " $(1))/'
 PRINT = PRINT_CLASSIC
 
-#################################
-# Profiles
-#################################
-
-CONFIG_COMPLETE = -f docker-compose.yml
-
-# Default
-CONFIG = $(CONFIG_COMPLETE)
-
-.PHONY: complete
-complete: ## Use "complete" profile
-	$(eval CONFIG = $(CONFIG_COMPLETE))
-	@true
 
 #################################
 # Targets
 #################################
-.PHONY: build
-build: ## Prepare containers
-	@$(COMPOSE) build
 
-.PHONY: clear
-clear: ## Clear cache & logs
-	@$(RUN) $(PHP) rm -rf var/cache/* var/logs/*
+.PHONY: start
+start: pretty mkdir network up install ## Start containers & install application
 
-.PHONY: destroy
-destroy: stop ## Stop and remove containers
-	@$(COMPOSE) rm --all -f $(APP) 2>&1 | $(call $(PRINT),REMOVE,$(COLOR_INSTALL))
-
-.PHONY: down
-down: ## Stop and remove containers, networks, volumes
-	@$(COMPOSE) down -v --remove-orphans
-
-.PHONY: exec
-exec: ## Open a shell in the container (options: user=www-data, cmd=bash, cont=php)
-	$(eval cont ?= $(PHP))
-	$(eval user ?= www-data)
-	$(eval cmd ?= bash)
-	@$(COMPOSE) exec --user $(user) $(cont) $(cmd)
+.PHONY: up
+up: ## Builds, (re)creates, starts containers
+	@$(COMPOSE) up -d --remove-orphans 2>&1 | $(call $(PRINT),UP,$(COLOR_UP))
 
 .PHONY: install
 install: ready ## Install application
 	@$(COMPOSE) exec $(DB) /usr/local/src/init.sh | $(call $(PRINT),INSTALL,$(COLOR_INSTALL))
-	@$(COMPOSE) exec --user www-data $(PHP) bin/install | $(call $(PRINT),INSTALL,$(COLOR_INSTALL))
+	@$(RUN) bin/install | $(call $(PRINT),INSTALL,$(COLOR_INSTALL))
 
-.PHONY: logs
-logs: ## Dump containers logs (option: cont=php])
-	@$(COMPOSE) logs -f $(cont)
+.PHONY: ready
+ready: pretty ## Check if environment is ready
+	@echo "[READY]" | $(call $(PRINT),READY,$(COLOR_READY))
+	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(APP):9000 ddn0/wait 2> /dev/null
+	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(WEB):80 ddn0/wait 2> /dev/null
+	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(DB):5432 ddn0/wait 2> /dev/null
+	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(RABBITMQ):5672 ddn0/wait 2> /dev/null
 
-.PHONY: network
-network:
-	@$(DOCKER) network create $(NETWORK) 2> /dev/null || true
+.PHONY: open
+open: ## Open the browser
+	@xdg-open http://$(WEB).$(NETWORK)/ > /dev/null
 
-.PHONY: pgsql
-pgsql: ## Run pgsql cli
-	@$(COMPOSE) exec $(DB) psql $(DB_NAME) -U mediatok
+.PHONY: phpunit
+phpunit: ## Run phpunit test suite
+	@$(EXEC) $(APP) vendor/bin/phpunit
 
 .PHONY: php-cs-fixer
-php-cs-fixer: ## Run php-cs-fixer (options: fix=true)
-ifndef fix
-	@$(COMPOSE) exec --user www-data $(PHP) vendor/bin/php-cs-fixer fix -v --dry-run --diff --config=.php_cs.dist
-	exit 0
+php-cs-fixer: ## Run php-cs-fixer
+	@$(RUN) vendor/bin/php-cs-fixer fix -v --dry-run --diff --config=.php_cs.dist
+
+.PHONY: php-cs-fixer-exec
+php-cs-fixer-exec: ## Run php-cs-fixer
+	@$(RUN) vendor/bin/php-cs-fixer fix -v --diff --config=.php_cs.dist
+
+.PHONY: run
+run: ## Execute a command in a new application container (ie. make run cmd="ls -l")
+ifndef cmd
+	@echo "To use the 'run' target, you MUST add the 'cmd' argument"
+	exit 1
 endif
-	@$(COMPOSE) exec --user www-data $(PHP) vendor/bin/php-cs-fixer fix -v --diff --config=.php_cs.dist
+	@$(RUN) $(cmd)
+
+.PHONY: exec
+exec: ## Open a shell in the application container (options: user [www-data], cmd [bash], cont [`php`])
+	$(eval cont ?= $(APP))
+	$(eval user ?= www-data)
+	$(eval cmd ?= bash)
+	@$(COMPOSE) exec --user $(user) $(cont) $(cmd)
+
+.PHONY: pgsql
+pgsql: ## Run pgsql cli (options: db_name [`mediatok`])
+	$(eval db_name ?= $(DB_NAME))
+	@$(COMPOSE) exec $(DB) psql $(db_name) -U mediatok
+
+.PHONY: migrate
+migrate: ## Run doctrine migrations
+	@$(RUN) bin/console doctrine:migrations:migrate --no-interaction
 
 .PHONY: ps
 ps: ## List containers status
 	@$(COMPOSE) ps
 
-.PHONY: phpunit
-phpunit: ## Execute units tests
-	@$(COMPOSE) exec $(PHP) vendor/bin/phpunit
+.PHONY: logs
+logs: ## Dump containers logs
+	@$(COMPOSE) logs -f
 
-.PHONY: ready
-ready: pretty ## Check if environment is ready
-	@echo "[READY]" | $(call $(PRINT),READY,$(COLOR_READY))
-	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(PHP):9000 ddn0/wait 2> /dev/null
-	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(WEB):80 ddn0/wait 2> /dev/null
-	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(DB):5432 ddn0/wait 2> /dev/null
-	@docker run --rm --net=$(NETWORK) -e TIMEOUT=30 -e TARGETS=$(RABBITMQ):5672 ddn0/wait 2> /dev/null
+.PHONY: stop
+stop: ## Stop containers
+	@$(COMPOSE) stop 2>&1 | $(call $(PRINT),STOP,$(COLOR_INSTALL))
+
+.PHONY: rm
+rm: ## Remove containers
+	@$(COMPOSE) rm --all -f 2>&1 | $(call $(PRINT),REMOVE,$(COLOR_INSTALL))
+
+.PHONY: down
+.PHONY: down
+down: ## Stop and remove containers, networks, volumes
+	@$(COMPOSE) down -v --remove-orphans
+
+.PHONY: destroy
+destroy: stop rm ## Stop and remove containers
 
 .PHONY: recreate
 recreate: destroy up ## Recreate containers
 
+.PHONY: clear
+clear: ## Clear cache & logs
+	rm -rf app/cache/* app/logs/*
+
 .PHONY: reset
-reset: clear destroy ## Reset application
-	rm -rf vendor/ var/bootstrap.php.cache app/config/parameters.yml
+reset: down clear ## Reset application
+	rm -rf vendor/ app/bootstrap.php.cache app/config/parameters.yml node_modules/
 
-.PHONY: run
-run: ## Execute a command in a container (options: user=www-data, cont=php, cmd="pwd")
-	$(eval user ?= www-data)
-	$(eval cont ?= $(PHP))
-ifndef cmd
-	@echo "To use the 'run' target, you MUST add the 'cmd' argument"
-	exit 1
-endif
-	@$(RUN) --user $(user) $(cont) $(cmd)
+.PHONY: mkdir
+mkdir:
+	@mkdir -p ~/.composer
 
-.PHONY: start
-start: pretty network up install ## Start containers & install application
-
-.PHONY: stop
-stop: pretty ## Stop containers
-	@$(COMPOSE) stop $(APP) 2>&1 | $(call $(PRINT),STOP,$(COLOR_INSTALL))
-
-.PHONY: up
-up: ## Builds, (re)creates, starts containers
-	@$(COMPOSE) up -d --remove-orphans $(APP) 2>&1 | $(call $(PRINT),UP,$(COLOR_UP))
+.PHONY: network
+network:
+	@docker network create ${NETWORK} 2> /dev/null || true
 
 .PHONY: pretty
 pretty:
